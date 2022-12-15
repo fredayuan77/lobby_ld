@@ -1,15 +1,11 @@
 import requests
-import os
 import pandas as pd
 import json 
 import numpy as np
 import dateutil.parser as parser
 
-
-token = os.getenv('PRIVATE_API_KEY')
-
 class LobbyFile():
-    
+
     def __init__(self, token, start_date, end_date, client_state):
         """Initialize a Lobby API. """
         self.ld_token = token
@@ -46,8 +42,9 @@ class LobbyFile():
 
         Examples
         --------
-        >>> from lobby_lda import lobby_lda
-        >>> lobby_api = lobby_lda.LobbyFile(token, '01/25/2022', '02/10/2022','NJ')
+        >>> from lobby_ld import lobby_ld
+        >>> import os
+        >>> lobby_api = lobby_ld.LobbyFile(os.getenv('PRIVATE_API_KEY'), '01/25/2022', '02/10/2022','NJ')
         >>> lobby_api.get_file_summary()
 
         ============= ================= ============= ============ ================= =====================
@@ -101,7 +98,6 @@ class LobbyFile():
 
 
 class LobbyIssue():
-    token = os.getenv('PRIVATE_API_KEY')
     def __init__(self, token, filing_year,issue_search,client_state):
         """
         Initialize a LobbyIssue API request call. 
@@ -141,8 +137,9 @@ class LobbyIssue():
 
         Examples
         --------
-        >>> from lobby_lda import lobby_lda
-        >>> issue_api = lobby_lda.LobbyIssue(token, 2022, 'water quality', 'MA')
+        >>> from lobby_ld import lobby_ld
+        >>> import os
+        >>> issue_api = lobby_ld.LobbyIssue(os.getenv('PRIVATE_API_KEY'), 2022, 'water quality', 'MA')
         >>> issue_api.get_issue_file()
 
         ====== =================== ============================= ================================ ================================================= ===================================================
@@ -191,8 +188,9 @@ class LobbyIssue():
 
         Examples
         --------
-        >>> from lobby_lda import lobby_lda
-        >>> issue_api = lobby_lda.LobbyIssue(token, 2022, 'water quality', 'MA')
+        >>> from lobby_ld import lobby_ld
+        >>> import os
+        >>> issue_api = lobby_ld.LobbyIssue(os.getenv('PRIVATE_API_KEY'), 2022, 'water quality', 'MA')
         >>> issue_api.get_issue_description()
         ['Environment/Superfund','Science/Technology','Health Issues']
 
@@ -214,8 +212,9 @@ class LobbyIssue():
             A pandas dataframe containing information on lobbyists, filtered by the issues, year, and client state location. 
         Examples
         --------
-        >>> from lobby_lda import lobby_lda
-        >>> issue_api = lobby_lda.LobbyIssue(token, 2022, 'oil', 'MA')
+        >>> from lobby_ld import lobby_ld
+        >>> import os
+        >>> issue_api = lobby_ld.LobbyIssue(os.getenv('PRIVATE_API_KEY'), 2022, 'oil', 'MA')
         >>> issue_api.get_issue_lobbyist()
 
         ===== ================ =========== ======================== =================== ================= ===================== ================== ========================
@@ -261,8 +260,9 @@ class LobbyIssue():
 
         Examples
         --------
-        >>> from lobby_lda import lobby_lda
-        >>> issue_api = lobby_lda.LobbyIssue(token, 2021, 'health','NJ')
+        >>> from lobby_ld import lobby_ld
+        >>> import os
+        >>> issue_api = lobby_ld.LobbyIssue(os.getenv('PRIVATE_API_KEY'), 2021, 'health','NJ')
         >>> issue_api.get_lobbyists_count()
         "180 unique lobbyists are hired by NJ clients to work on health issues in 2021."
         """
@@ -284,8 +284,9 @@ class LobbyIssue():
 
         Examples
         --------
-        >>> from lobby_lda import lobby_lda
-        >>> issue_api = lobby_lda.LobbyIssue(token, 2022, 'food','FL')
+        >>> from lobby_ld import lobby_ld
+        >>> import os
+        >>> issue_api = lobby_ld.LobbyIssue(os.getenv('PRIVATE_API_KEY'), 2022, 'food','FL')
         >>> issue_api.get_lobbyists_name()
         ['JOHNIE BOATRIGHT' 'ROGER SZEMRAJ' 'PHILIP KARSTING' 'JENNIFER CERVANTES'
         'RYAN WESTON' 'VAN HIPP' 'ROBIN WALKER' 'JOHN PROVENZANO' 'TODD WEISS'
