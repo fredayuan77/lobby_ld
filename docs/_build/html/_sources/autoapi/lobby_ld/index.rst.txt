@@ -1,0 +1,23 @@
+:py:mod:`lobby_ld`
+==================
+
+.. py:module:: lobby_ld
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   lobby_ld/index.rst
+
+
+Package Contents
+----------------
+
+.. py:data:: __version__
+   
+
+   
+

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>lobby_ld.lobby_ld &mdash; lobby_ld  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> lobby_ld
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../example.html">Example usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../conduct.html">Code of Conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">lobby_ld</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">lobby_ld.lobby_ld</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for lobby_ld.lobby_ld</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">json</span> 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">dateutil.parser</span> <span class="k">as</span> <span class="nn">parser</span>
+
+<div class="viewcode-block" id="LobbyFile"><a class="viewcode-back" href="../../autoapi/lobby_ld/lobby_ld/index.html#lobby_ld.lobby_ld.LobbyFile">[docs]</a><span class="k">class</span> <span class="nc">LobbyFile</span><span class="p">():</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">client_state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize a Lobby API. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ld_token</span> <span class="o">=</span> <span class="n">token</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="n">start_date</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">end_date</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client_ppb_state</span> <span class="o">=</span> <span class="n">client_state</span>
+
+<div class="viewcode-block" id="LobbyFile.get_file_summary"><a class="viewcode-back" href="../../autoapi/lobby_ld/lobby_ld/index.html#lobby_ld.lobby_ld.LobbyFile.get_file_summary">[docs]</a>    <span class="k">def</span> <span class="nf">get_file_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get summary statistics on selected lobbying files. </span>
+<span class="sd">        </span>
+<span class="sd">        Output is aggregated by year and quarter. Summary infomation includes:</span>
+<span class="sd">        number of reports filed during the requested period, </span>
+<span class="sd">        total expenses associated with these reports, </span>
+<span class="sd">        total income associated with these reports,</span>
+<span class="sd">        number of unique clients filed reports during the period, </span>
+<span class="sd">        and number of unique registrants (lobbying companies or other individual organizations) filed reports during the period.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        token : string.</span>
+<span class="sd">            The token requested from Lobbying Disclosure Website. </span>
+<span class="sd">        start_date : string. </span>
+<span class="sd">            The start date for requested filing posted period. Date in the &#39;MM/DD/YYYY&#39; format.</span>
+<span class="sd">        end_date : string.</span>
+<span class="sd">            The end date for requested filing posted period. Date in the &#39;MM/DD/YYYY&#39; format.</span>
+<span class="sd">        client_state: string.</span>
+<span class="sd">            The U.S. state location of lobbying clients or organizations. State name is in two letter abbreviation format.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.DataFrame</span>
+<span class="sd">            A pandas dataframe indicates summary information of filtered lobbying files. Index is year_quarter, and columns are aggregated statistics. </span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from lobby_ld import lobby_ld</span>
+<span class="sd">        &gt;&gt;&gt; import os</span>
+<span class="sd">        &gt;&gt;&gt; lobby_api = lobby_ld.LobbyFile(os.getenv(&#39;PRIVATE_API_KEY&#39;), &#39;01/25/2022&#39;, &#39;02/10/2022&#39;,&#39;NJ&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; lobby_api.get_file_summary()</span>
+
+<span class="sd">        ============= ================= ============= ============ ================= =====================</span>
+<span class="sd">        year_quarter  number_of_reports	total_expense total_income number_of_clients number_of_registrants</span>
+<span class="sd">        ============= ================= ============= ============ ================= =====================</span>
+<span class="sd">        2021Q4	      13	            746000.0	  245000.0	   3	             10</span>
+<span class="sd">        2022Q1	      5	                0.0	          0.0	       3	             5</span>
+<span class="sd">        ============= ================= ============= ============ ================= =====================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">session</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;api_key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ld_token</span>
+
+        <span class="c1"># parse date entered into datetime python format </span>
+        <span class="n">date1</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_date</span><span class="p">)</span>
+        <span class="n">date2</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end_date</span><span class="p">)</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;filing_dt_posted_after&quot;</span><span class="p">:</span> <span class="n">date1</span><span class="p">,</span>
+        <span class="s2">&quot;filing_dt_posted_before&quot;</span> <span class="p">:</span> <span class="n">date2</span><span class="p">,</span>
+        <span class="s2">&quot;client_ppb_state&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_ppb_state</span><span class="p">}</span>
+
+        <span class="n">r</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://lda.senate.gov/api/v1/filings/&#39;</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">]</span>
+        <span class="c1"># to obtain all results on all pages </span>
+        <span class="k">while</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;next&#39;</span><span class="p">]:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;next&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">])</span>
+        <span class="c1">#convert json to pd.DataFrame</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+
+
+        <span class="c1"># #create year_quarter</span>
+        <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;first_quarter&#39;</span><span class="p">:</span> <span class="s1">&#39;Q1&#39;</span><span class="p">,</span> <span class="s1">&#39;second_quarter&#39;</span> <span class="p">:</span><span class="s1">&#39;Q2&#39;</span><span class="p">,</span> <span class="s1">&#39;third_quarter&#39;</span><span class="p">:</span><span class="s1">&#39;Q3&#39;</span><span class="p">,</span><span class="s1">&#39;fourth_quarter&#39;</span><span class="p">:</span><span class="s1">&#39;Q4&#39;</span><span class="p">,</span><span class="s2">&quot;mid_year&quot;</span><span class="p">:</span><span class="s1">&#39;Q2&#39;</span><span class="p">,</span><span class="s1">&#39;year_end&#39;</span><span class="p">:</span><span class="s1">&#39;Q4&#39;</span><span class="p">}</span>
+        <span class="c1"># create new column year_quarter</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;year_quarter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;filing_year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;filing_period&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+
+        <span class="c1">#convert income and expense from string to int, used for calculation later</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;expenses&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">([</span><span class="kc">None</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;expenses&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;expenses&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;income&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">([</span><span class="kc">None</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;income&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;income&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+        <span class="c1"># groupby year and quarter, show aggregated result</span>
+        <span class="n">df_summary</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;year_quarter&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s1">&#39;filing_uuid&#39;</span><span class="p">:</span> <span class="s1">&#39;nunique&#39;</span><span class="p">,</span> <span class="s1">&#39;expenses&#39;</span><span class="p">:</span> <span class="s1">&#39;sum&#39;</span><span class="p">,</span><span class="s1">&#39;income&#39;</span><span class="p">:</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span><span class="s1">&#39;client.client_id&#39;</span><span class="p">:</span><span class="s1">&#39;nunique&#39;</span><span class="p">,</span><span class="s1">&#39;registrant.id&#39;</span><span class="p">:</span><span class="s1">&#39;nunique&#39;</span><span class="p">})</span>
+        <span class="n">df_summary</span> <span class="o">=</span> <span class="n">df_summary</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;filing_uuid&#39;</span><span class="p">:</span> <span class="s2">&quot;number_of_reports&quot;</span><span class="p">,</span> <span class="s1">&#39;expenses&#39;</span><span class="p">:</span> <span class="s1">&#39;total_expense&#39;</span><span class="p">,</span> <span class="s1">&#39;income&#39;</span><span class="p">:</span><span class="s1">&#39;total_income&#39;</span><span class="p">,</span> <span class="s1">&#39;client.client_id&#39;</span><span class="p">:</span><span class="s1">&#39;number_of_clients&#39;</span><span class="p">,</span> <span class="s1">&#39;registrant.id&#39;</span><span class="p">:</span> <span class="s1">&#39;number_of_registrants&#39;</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">df_summary</span></div></div>
+
+
+
+
+<div class="viewcode-block" id="LobbyIssue"><a class="viewcode-back" href="../../autoapi/lobby_ld/lobby_ld/index.html#lobby_ld.lobby_ld.LobbyIssue">[docs]</a><span class="k">class</span> <span class="nc">LobbyIssue</span><span class="p">():</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">filing_year</span><span class="p">,</span><span class="n">issue_search</span><span class="p">,</span><span class="n">client_state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a LobbyIssue API request call. </span>
+
+<span class="sd">        Parameters </span>
+<span class="sd">        ----------</span>
+<span class="sd">        token : string.</span>
+<span class="sd">            The token requested from Lobbying Disclosure Website. </span>
+<span class="sd">        filing_year : int. </span>
+<span class="sd">            Any year ranges from 1998 to 2022.</span>
+<span class="sd">        issue_search : string.</span>
+<span class="sd">            Issue keywords used to query reports. </span>
+<span class="sd">        client_state: string.</span>
+<span class="sd">            The U.S. state location of lobbying clients or organizations. State name is in two letter abbreviation format.</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ld_token</span> <span class="o">=</span> <span class="n">token</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">=</span> <span class="n">filing_year</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">issue_search</span> <span class="o">=</span> <span class="n">issue_search</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client_ppb_state</span> <span class="o">=</span> <span class="n">client_state</span>
+
+<div class="viewcode-block" id="LobbyIssue.get_issue_file"><a class="viewcode-back" href="../../autoapi/lobby_ld/lobby_ld/index.html#lobby_ld.lobby_ld.LobbyIssue.get_issue_file">[docs]</a>    <span class="k">def</span> <span class="nf">get_issue_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve a dataframe of lobbying activities around the issue search result. </span>
+
+<span class="sd">        Users can search keywords in the issue search field. Any relevant reports under the </span>
+<span class="sd">        advanced text search will show up. </span>
+<span class="sd">        Information includes the standard code assigned by Lobbying Disclosure </span>
+<span class="sd">        Authority in both short and long version, and specific description on the issues </span>
+<span class="sd">        written by registrants. The dataframe also includes government entity information, if any. </span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.DataFrame</span>
+<span class="sd">            A pandas dataframe indicates lobbying activites around the issue keywords. </span>
+<span class="sd">            This includes both the direct issues and indirect issues in the whole report history.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from lobby_ld import lobby_ld</span>
+<span class="sd">        &gt;&gt;&gt; import os</span>
+<span class="sd">        &gt;&gt;&gt; issue_api = lobby_ld.LobbyIssue(os.getenv(&#39;PRIVATE_API_KEY&#39;), 2022, &#39;water quality&#39;, &#39;MA&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; issue_api.get_issue_file()</span>
+
+<span class="sd">        ====== =================== ============================= ================================ ================================================= ===================================================</span>
+<span class="sd">        index  general_issue_code  general_issue_code_display    description                      lobbyists	                                        government_entities</span>
+<span class="sd">        ====== =================== ============================= ================================ ================================================= ===================================================</span>
+<span class="sd">        0      ENV                 Environment/Superfund         Water Quality policies           [{&#39;lobbyist&#39;: {&#39;id&#39;: 93728, &#39;prefix&#39;: None, &#39;p..  [{&#39;id&#39;: 2, &#39;name&#39;: &#39;HOUSE OF REPRESENTATIVES&#39;}...</span>
+<span class="sd">        1      SCI                 Science/Technology            Proposals related to S.1260      [{&#39;lobbyist&#39;: {&#39;id&#39;: 93728, &#39;prefix&#39;: None, &#39;p..  [{&#39;id&#39;: 2, &#39;name&#39;: &#39;HOUSE OF REPRESENTATIVES&#39;}...</span>
+<span class="sd">        2      HCR                 Health Issues                 American Rescue Plan implementa  [{&#39;lobbyist&#39;: {&#39;id&#39;: 93728, &#39;prefix&#39;: None, &#39;p..  [{&#39;id&#39;: 34, &#39;name&#39;: &#39;Health &amp; Human Services, ...</span>
+<span class="sd">        3      ENV                 Environment/Superfund         Water Quality policies.          [{&#39;lobbyist&#39;: {&#39;id&#39;: 93728, &#39;prefix&#39;: None, &#39;p..  [{&#39;id&#39;: 2, &#39;name&#39;: &#39;HOUSE OF REPRESENTATIVES&#39;}...</span>
+<span class="sd">        4      SCI                 Science/Technology            Proposals related to S.1260      [{&#39;lobbyist&#39;: {&#39;id&#39;: 93728, &#39;prefix&#39;: None, &#39;p..  [{&#39;id&#39;: 2, &#39;name&#39;: &#39;HOUSE OF REPRESENTATIVES&#39;}...</span>
+<span class="sd">        5      HCR                 Health Issues                 American Rescue Plan implementa  [{&#39;lobbyist&#39;: {&#39;id&#39;: 93728, &#39;prefix&#39;: None, &#39;p..  [{&#39;id&#39;: 34, &#39;name&#39;: &#39;Health &amp; Human Services, ...</span>
+<span class="sd">        ====== =================== ============================= ================================ ================================================= ===================================================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">session</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;api_key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ld_token</span>
+       
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;filing_year&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">year</span><span class="p">,</span>
+                <span class="s2">&quot;client_ppb_state&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_ppb_state</span><span class="p">,</span>
+                <span class="s1">&#39;filing_specific_lobbying_issues&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">issue_search</span>
+                <span class="p">}</span>
+
+        <span class="n">r</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://lda.senate.gov/api/v1/filings/&#39;</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">]</span>
+
+        <span class="c1"># to obtain all results on all pages </span>
+        <span class="k">while</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;next&#39;</span><span class="p">]:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;next&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">])</span>
+
+        <span class="c1"># convert Json to pandas Dataframe</span>
+        <span class="n">df_file</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">results</span><span class="p">,</span><span class="n">record_path</span><span class="o">=</span><span class="s1">&#39;lobbying_activities&#39;</span><span class="p">)</span> 
+        <span class="k">return</span> <span class="n">df_file</span></div>
+
+<div class="viewcode-block" id="LobbyIssue.get_issue_description"><a class="viewcode-back" href="../../autoapi/lobby_ld/lobby_ld/index.html#lobby_ld.lobby_ld.LobbyIssue.get_issue_description">[docs]</a>    <span class="k">def</span> <span class="nf">get_issue_description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve standard issue codes on searched issue keywords.</span>
+<span class="sd">        Users can obtain a list of standard code on issue topics around the keywords. This also include the issue code of other lobbying activities filed within the same reports. </span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy.array</span>
+<span class="sd">            An array providing description around the issue keywords in search. This includes the standard issue code of relevant reports. </span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from lobby_ld import lobby_ld</span>
+<span class="sd">        &gt;&gt;&gt; import os</span>
+<span class="sd">        &gt;&gt;&gt; issue_api = lobby_ld.LobbyIssue(os.getenv(&#39;PRIVATE_API_KEY&#39;), 2022, &#39;water quality&#39;, &#39;MA&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; issue_api.get_issue_description()</span>
+<span class="sd">        [&#39;Environment/Superfund&#39;,&#39;Science/Technology&#39;,&#39;Health Issues&#39;]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">df_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_issue_file</span><span class="p">()</span>
+        <span class="c1"># get unique issue code from the dataframe</span>
+        <span class="n">issue</span> <span class="o">=</span> <span class="n">df_file</span><span class="p">[</span><span class="s2">&quot;general_issue_code_display&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">print</span><span class="p">(</span><span class="n">issue</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LobbyIssue.get_issue_lobbyist"><a class="viewcode-back" href="../../autoapi/lobby_ld/lobby_ld/index.html#lobby_ld.lobby_ld.LobbyIssue.get_issue_lobbyist">[docs]</a>    <span class="k">def</span> <span class="nf">get_issue_lobbyist</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve a dataframe of lobbyists working on relevant issues. </span>
+
+<span class="sd">        This function gets the comprehensive information on lobbyists, based on the issues he/she lobbied during the year. Lobbyist information includes covered_position, lobbyist.id, lobbyist.prefix, lobbyist.first_name, lobbyist.nickname, lobbyist.middle_name, lobbyist.last_name, and lobbyist.suffix.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pandas.DataFrame</span>
+<span class="sd">            A pandas dataframe containing information on lobbyists, filtered by the issues, year, and client state location. </span>
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from lobby_ld import lobby_ld</span>
+<span class="sd">        &gt;&gt;&gt; import os</span>
+<span class="sd">        &gt;&gt;&gt; issue_api = lobby_ld.LobbyIssue(os.getenv(&#39;PRIVATE_API_KEY&#39;), 2022, &#39;oil&#39;, &#39;MA&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; issue_api.get_issue_lobbyist()</span>
+
+<span class="sd">        ===== ================ =========== ======================== =================== ================= ===================== ================== ========================</span>
+<span class="sd">        index covered_position lobbyist.id lobbyist.prefix_display  lobbyist.first_name lobbyist.nickname lobbyist.middle_name  lobbyist.last_name lobbyist.suffix_display</span>
+<span class="sd">        ===== ================ =========== ======================== =================== ================= ===================== ================== ========================</span>
+<span class="sd">        0     None             45118       None                     MICHAEL             None              None                  BRADLEY            None</span>
+<span class="sd">        1     None             139718      MR.                      THOMAS              None              None                  CURRY              None</span>
+<span class="sd">        2     None             139529      MRS.                     HAYLEY              None              None                  BOOK               None</span>
+<span class="sd">        ===== ================ =========== ======================== =================== ================= ===================== ================== ========================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">session</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;api_key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ld_token</span>
+       
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;filing_year&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">year</span><span class="p">,</span>
+                <span class="s2">&quot;client_ppb_state&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_ppb_state</span><span class="p">,</span>
+                <span class="s1">&#39;filing_specific_lobbying_issues&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">issue_search</span>
+                <span class="p">}</span>
+
+        <span class="n">r</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://lda.senate.gov/api/v1/filings/&#39;</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">]</span>
+
+        <span class="k">while</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;next&#39;</span><span class="p">]:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;next&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">])</span>
+        <span class="c1"># get lobbyists information only</span>
+        <span class="n">df_lobbyists</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">record_path</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;lobbying_activities&#39;</span><span class="p">,</span><span class="s1">&#39;lobbyists&#39;</span><span class="p">])</span> 
+        <span class="n">df_lobbyists</span> <span class="o">=</span> <span class="n">df_lobbyists</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;new&#39;</span><span class="p">,</span><span class="s1">&#39;lobbyist.prefix&#39;</span><span class="p">,</span><span class="s1">&#39;lobbyist.suffix&#39;</span> <span class="p">])</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span> <span class="c1">#drop unused columns</span>
+
+        <span class="k">return</span> <span class="n">df_lobbyists</span></div>
+
+<div class="viewcode-block" id="LobbyIssue.get_lobbyists_count"><a class="viewcode-back" href="../../autoapi/lobby_ld/lobby_ld/index.html#lobby_ld.lobby_ld.LobbyIssue.get_lobbyists_count">[docs]</a>    <span class="k">def</span> <span class="nf">get_lobbyists_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get number of unique lobbyists working on a broad issue topics. </span>
+<span class="sd">        Users can filter the result count by client state location, report year, and issue keywords in text.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        string.</span>
+<span class="sd">            Output is an one sentence string including the number of lobbyists, and its relevant filtering conditions.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from lobby_ld import lobby_ld</span>
+<span class="sd">        &gt;&gt;&gt; import os</span>
+<span class="sd">        &gt;&gt;&gt; issue_api = lobby_ld.LobbyIssue(os.getenv(&#39;PRIVATE_API_KEY&#39;), 2021, &#39;health&#39;,&#39;NJ&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; issue_api.get_lobbyists_count()</span>
+<span class="sd">        &quot;180 unique lobbyists are hired by NJ clients to work on health issues in 2021.&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">df_lobbyists</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_issue_lobbyist</span><span class="p">()</span> <span class="c1">#obtain lobbyist information dataframe</span>
+        <span class="n">lob_count</span> <span class="o">=</span> <span class="n">df_lobbyists</span><span class="p">[</span><span class="s1">&#39;lobbyist.id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span> <span class="c1"># count unique number of lobbyists in condition</span>
+        <span class="c1"># return output in a string sentense</span>
+        <span class="k">return</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">lob_count</span><span class="si">}</span><span class="s1"> unique lobbyists are hired by </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">client_ppb_state</span><span class="si">}</span><span class="s1"> clients to work on </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">issue_search</span><span class="si">}</span><span class="s1"> issues in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">year</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="LobbyIssue.get_lobbyists_name"><a class="viewcode-back" href="../../autoapi/lobby_ld/lobby_ld/index.html#lobby_ld.lobby_ld.LobbyIssue.get_lobbyists_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_lobbyists_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get full name for lobbyists who work on a broad issue topics.</span>
+<span class="sd">        Lobbyist names are filtered by client state location, report year, and issue keywords in text.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy.array</span>
+<span class="sd">            Output is an array including the full name of lobbyists, based on relevant filtering conditions.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from lobby_ld import lobby_ld</span>
+<span class="sd">        &gt;&gt;&gt; import os</span>
+<span class="sd">        &gt;&gt;&gt; issue_api = lobby_ld.LobbyIssue(os.getenv(&#39;PRIVATE_API_KEY&#39;), 2022, &#39;food&#39;,&#39;FL&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; issue_api.get_lobbyists_name()</span>
+<span class="sd">        [&#39;JOHNIE BOATRIGHT&#39; &#39;ROGER SZEMRAJ&#39; &#39;PHILIP KARSTING&#39; &#39;JENNIFER CERVANTES&#39;</span>
+<span class="sd">        &#39;RYAN WESTON&#39; &#39;VAN HIPP&#39; &#39;ROBIN WALKER&#39; &#39;JOHN PROVENZANO&#39; &#39;TODD WEISS&#39;</span>
+<span class="sd">        &#39;JOHN BREAUX&#39; &#39;JASON GLEASON&#39; &#39;WALLY BURNETT&#39; &#39;SALIM ALAMEDDIN&#39;</span>
+<span class="sd">        &#39;JOHN GREEN&#39; &#39;MATHEW LAPINSKI&#39; &#39;STEWART HALL&#39; &#39;HUNTER MOORHEAD&#39;</span>
+<span class="sd">        &#39;MARK WARREN&#39; &#39;EDWARD ROYCE&#39; &#39;SAMANTHA CARL-YODER&#39; &#39;DANIEL JOSEPH&#39;</span>
+<span class="sd">        &#39;CARMENCITA WHONDER&#39; &#39;DOUGLAS MAGUIRE&#39; &#39;RUSSELL SULLIVAN&#39;</span>
+<span class="sd">        &#39;HAROLD HANCOCK&#39; &#39;JAMES DAVENPORT&#39; &#39;JOHN MONSIF&#39; &#39;KYLE GILLEY&#39;</span>
+<span class="sd">        &#39;STEVE DANON&#39; &#39;JODI BOCK DAVIDSON&#39; &#39;ALEX KRIGSTEIN&#39; &#39;SARAH MATHIAS&#39;</span>
+<span class="sd">        &#39;ADAM GOODMAN&#39; &#39;HENRY MENN&#39; &#39;BRENDA OTTERSON&#39; &#39;HARRY GLENN&#39;</span>
+<span class="sd">        &#39;STEVEN GIULI&#39; &#39;JOSE DIAZ&#39; &#39;BRIAN BALLARD&#39; &#39;MARCKIA HAYES&#39;]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">df_lobbyists</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_issue_lobbyist</span><span class="p">()</span> <span class="c1"># obtain all lobbyist dataframe under condition </span>
+        <span class="c1"># creat new columns of lobbyist&#39;s full name, concatenate first and last name </span>
+        <span class="n">df_lobbyists</span><span class="p">[</span><span class="s1">&#39;lobbyist.full_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_lobbyists</span><span class="p">[</span><span class="s1">&#39;lobbyist.first_name&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="o">+</span>  <span class="n">df_lobbyists</span><span class="p">[</span><span class="s1">&#39;lobbyist.last_name&#39;</span><span class="p">]</span>
+        <span class="c1"># get full name of unique lobbyists</span>
+        <span class="n">lobbyist_name</span> <span class="o">=</span> <span class="n">df_lobbyists</span><span class="p">[</span><span class="s1">&#39;lobbyist.full_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">lobbyist_name</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Freda Yuan.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
